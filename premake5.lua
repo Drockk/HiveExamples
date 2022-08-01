@@ -16,3 +16,4 @@ workspace "HiveExamples"
     outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
     include "Prog1"
+    include "Prog2"
