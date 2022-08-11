@@ -6,7 +6,7 @@
 #include <plf_hive.h>
 
 int main() {
-	constexpr auto elementsCount{ 1000000 };
+	constexpr auto elementsCount{ 10000000 };
 
 	std::random_device rd;
 	std::mt19937 mt(rd());
@@ -20,24 +20,55 @@ int main() {
 	}
 
 	auto start = std::chrono::high_resolution_clock::now();
-	for(auto i{ 0 }; i < 100000; i++) {
-		const std::uniform_int dist(0, elementsCount - i);
+	for(auto i{ 0 }; i < 10000; i++) {
+		std::uniform_int dist(0, elementsCount - i);
 		const auto random = dist(mt);
-		vector.erase(vector.begin() + random);
+		const auto temp = std::next(vector.begin(), random);
+		vector.erase(temp);
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 
-	std::cout << "Vector erase time: " << end - start << std::endl;
+	std::cout << "Vector erase time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
 
-	auto start = std::chrono::high_resolution_clock::now();
+	start = std::chrono::high_resolution_clock::now();
 	for (auto i{ 0 }; i < 100000; i++) {
-		const std::uniform_int dist(0, elementsCount - i);
+		std::uniform_int dist(0, elementsCount - i);
 		const auto random = dist(mt);
-		hive.erase(hive.begin() + random);
+		const auto temp= std::next(hive.begin(), random);
+		hive.erase(temp);
 	}
-	auto end = std::chrono::high_resolution_clock::now();
+	end = std::chrono::high_resolution_clock::now();
 
-	std::cout << "Vector erase time: " << end - start << std::endl;
+	std::cout << "Hive erase time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
+
+	start = std::chrono::high_resolution_clock::now();
+	for (auto& el : vector)
+		el++;
+	end = std::chrono::high_resolution_clock::now();
+	std::cout << "Vector modify time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
+
+	start = std::chrono::high_resolution_clock::now();
+	for (auto& el : hive)
+		el++;
+	end = std::chrono::high_resolution_clock::now();
+	std::cout << "Hive modify time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
+
+
+	start = std::chrono::high_resolution_clock::now();
+	for (auto i{ 0 }; i < 100000; i++) {
+		vector.push_back(1);
+	}
+	end = std::chrono::high_resolution_clock::now();
+
+	std::cout << "Vector insert time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
+
+	start = std::chrono::high_resolution_clock::now();
+	for (auto i{ 0 }; i < 100000; i++) {
+		hive.insert(1);
+	}
+	end = std::chrono::high_resolution_clock::now();
+
+	std::cout << "Hive insert time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
 
 	return 0;
 }

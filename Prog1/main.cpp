@@ -10,7 +10,7 @@ int main() {
 
 	std::random_device rd;
 	std::mt19937 mt(rd());
-	const std::uniform_real_distribution<double> dist(1, 1000000);
+	std::uniform_real_distribution<double> dist(1, 1000000);
 
 	std::vector<double> vector;
 	plf::hive<double> hive;
@@ -20,14 +20,14 @@ int main() {
 		vector.push_back(dist(mt));
 	auto end = std::chrono::high_resolution_clock::now();
 
-	std::cout << "Vector insert time: " << end - start << std::endl;
+	std::cout << "Vector insert time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
 
 	start = std::chrono::high_resolution_clock::now();
 	for (auto i{ 0 }; i < elementsCount; i++)
 		hive.insert(dist(mt));
 	end = std::chrono::high_resolution_clock::now();
 
-	std::cout << "Hive insert time: " << end - start << std::endl;
+	std::cout << "Hive insert time: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
 
 	return 0;
 }
